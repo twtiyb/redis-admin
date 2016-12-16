@@ -15,23 +15,13 @@
  */
 package com.mauersu.util.redis;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.core.ConvertingCursor;
-import org.springframework.data.redis.core.Cursor;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ScanOptions;
+import org.springframework.data.redis.core.*;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Default implementation of {@link HashOperations}.
@@ -222,11 +212,11 @@ class DefaultHashOperations<K, HK, HV> extends AbstractOperations<K, Object> imp
 		return deserializeHashValues(rawValues);
 	}
 
-	public void delete(K key, Object... hashKeys) {
+	public Long delete(K key, Object... hashKeys) {
 		final byte[] rawKey = rawKey(key);
 		final byte[][] rawHashKeys = rawHashKeys(hashKeys);
 
-		execute(new RedisCallback<Object>() {
+		return (Long)execute(new RedisCallback<Object>() {
 
 			public Object doInRedis(RedisConnection connection) {
 				connection.select(dbIndex);

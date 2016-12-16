@@ -15,19 +15,15 @@
  */
 package com.mauersu.util.redis;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.TimeoutUtils;
 import org.springframework.data.redis.core.ValueOperations;
+
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Default implementation of {@link ValueOperations}.
@@ -267,5 +263,15 @@ class DefaultValueOperations<K, V> extends AbstractOperations<K, V> implements V
 				return connection.strLen(rawKey);
 			}
 		}, true);
+	}
+
+	@Override
+	public Boolean setBit(K key, long offset, boolean value) {
+		return null;
+	}
+
+	@Override
+	public Boolean getBit(K key, long offset) {
+		return null;
 	}
 }

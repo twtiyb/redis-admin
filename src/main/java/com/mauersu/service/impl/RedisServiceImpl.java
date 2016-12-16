@@ -23,7 +23,7 @@ public class RedisServiceImpl extends RedisApplication implements RedisService, 
 	
 	@Override
 	public void addRedisServer(String name, String host, int port, String password) {
-		createRedisConnection(name, host, port, password);
+		createRedisConnection(name, host, password);
 	}
 	
 	@Override

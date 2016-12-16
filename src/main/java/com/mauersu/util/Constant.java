@@ -1,13 +1,12 @@
 package com.mauersu.util;
 
+import com.mauersu.util.ztree.ZNode;
+import org.springframework.data.redis.core.RedisTemplate;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.springframework.data.redis.core.RedisTemplate;
-
-import com.mauersu.util.ztree.ZNode;
 
 @SuppressWarnings("rawtypes")
 public interface Constant {
@@ -20,7 +19,7 @@ public interface Constant {
 
 	public static final int DEFAULT_ITEMS_PER_PAGE											= 10;
 	public static final String DEFAULT_REDISKEY_SEPARATOR		 							= ":";
-	public static final int REDIS_DEFAULT_DB_SIZE 											= 15;
+	public static final int REDIS_DEFAULT_DB_SIZE 											= 0;
 	public static final String DEFAULT_SEPARATOR											= "_";
 	public static final String UTF_8 														= "utf-8";
 	

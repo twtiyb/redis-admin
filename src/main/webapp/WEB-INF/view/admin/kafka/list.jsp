@@ -29,8 +29,7 @@
 					</ul>
 				</div>
 
-				<input id="query_input" type="text" name="${queryLabel_en }" value="${queryValue }" class="form-control" aria-label="Text input with segmented button dropdown">
-				<span class="input-group-btn">
+				<input id="query_input" type="text" name="${queryLabel_en }" value="${queryValue }" class="form-control" aria-label="Text input with segmented button dropdown"> <span class="input-group-btn">
 					<button id="query_btn" class="btn btn-default" type="button">Query</button>
 				</span>
 			</div>

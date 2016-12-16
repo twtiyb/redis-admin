@@ -1,25 +1,19 @@
 package com.mauersu.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Semaphore;
-
+import com.mauersu.exception.ConcurrentException;
+import com.mauersu.util.redis.MyStringRedisTemplate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.connection.RedisNode;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisConnectionUtils;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.util.StringUtils;
 
-import com.mauersu.exception.ConcurrentException;
-import com.mauersu.util.redis.MyStringRedisTemplate;
-import com.mauersu.util.ztree.RedisZtreeUtil;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Semaphore;
 
 public abstract class RedisApplication implements Constant{
 
@@ -113,12 +107,12 @@ public abstract class RedisApplication implements Constant{
 		}).start();
 	}*/
 	
-	protected void createRedisConnection(String name, String host, int port, String password) {
-		JedisConnectionFactory connectionFactory = new JedisConnectionFactory();
-		connectionFactory.setHostName(host);
-		connectionFactory.setPort(port);
-		if(!StringUtils.isEmpty(password))
-			connectionFactory.setPassword(password);
+	protected void createRedisConnection(String name, String host, String password) {
+		RedisClusterConfiguration configuration = new RedisClusterConfiguration();
+		for (String nodeHost : host.split(",")) {
+			configuration.addClusterNode(new RedisNode(nodeHost.split(":")[0], Integer.valueOf(nodeHost.split(":")[1])));
+		}
+		JedisConnectionFactory connectionFactory = new JedisConnectionFactory(configuration);
 		connectionFactory.afterPropertiesSet();
 		RedisTemplate redisTemplate = new MyStringRedisTemplate();
 		redisTemplate.setConnectionFactory(connectionFactory);
@@ -128,25 +122,24 @@ public abstract class RedisApplication implements Constant{
 		Map<String, Object> redisServerMap = new HashMap<String, Object>();
 		redisServerMap.put("name", name);
 		redisServerMap.put("host", host);
-		redisServerMap.put("port", port);
 		redisServerMap.put("password", password);
 		RedisApplication.redisServerCache.add(redisServerMap);
 		
-		initRedisKeysCache(redisTemplate, name);
-		
-		RedisZtreeUtil.initRedisNavigateZtree(name);
+//		initRedisKeysCache(redisTemplate, name);
+//
+//		RedisZtreeUtil.initRedisNavigateZtree(name);
 	}
 	
 	private void initRedisKeysCache(RedisTemplate redisTemplate, String name) {
-		for(int i=0;i<=REDIS_DEFAULT_DB_SIZE;i++) {
-			initRedisKeysCache(redisTemplate, name, i);
-		}
+//		for(int i=0;i<=REDIS_DEFAULT_DB_SIZE;i++) {
+			initRedisKeysCache(redisTemplate, name, 1);
+//		}
 	}
 	
 	
 	protected void initRedisKeysCache(RedisTemplate redisTemplate, String serverName , int dbIndex) {
 		RedisConnection connection = RedisConnectionUtils.getConnection(redisTemplate.getConnectionFactory());
-		connection.select(dbIndex);
+//		connection.select(dbIndex);
 		Set<byte[]> keysSet = connection.keys("*".getBytes());
 		connection.close();
 		List<RKey> tempList = new ArrayList<RKey>();

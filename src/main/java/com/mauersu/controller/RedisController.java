@@ -1,31 +1,19 @@
 package com.mauersu.controller;
 
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import cn.workcenter.common.WorkcenterResult;
 import cn.workcenter.common.response.WorkcenterResponseBodyJson;
 import cn.workcenter.common.util.StringUtil;
-
 import com.mauersu.service.RedisService;
 import com.mauersu.service.ViewService;
-import com.mauersu.util.Constant;
-import com.mauersu.util.ConvertUtil;
-import com.mauersu.util.Pagination;
-import com.mauersu.util.QueryEnum;
-import com.mauersu.util.RKey;
-import com.mauersu.util.RedisApplication;
+import com.mauersu.util.*;
 import com.mauersu.util.ztree.ZNode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/redis")
@@ -126,9 +114,14 @@ public class RedisController extends RedisApplication implements Constant{
 		String queryKey_ch = QueryEnum.valueOf(queryKey).getQueryKeyCh();
 		String queryValue = StringUtil.getParameterByDefault(request, "queryValue", EMPTY_STRING);
 		String queryByKeyPrefixs = StringUtil.getParameterByDefault(request, "queryByKeyPrefixs", EMPTY_STRING);
-		
 		String[] keyPrefixs = request.getParameterValues("keyPrefixs");
-		
+		if (keyPrefixs != null && keyPrefixs.length > 0) {
+			queryByKeyPrefixs = String.join(":", keyPrefixs);
+		}
+		if (keyPrefixs != null && "".equals(keyPrefixs[0])){
+			keyPrefixs = null;
+		}
+
 		Pagination pagination = stringListPagination(request, queryKey, queryKey_ch, queryValue, queryByKeyPrefixs);
 		
 		logCurrentTime("viewService.getRedisKeys start");
@@ -146,13 +139,14 @@ public class RedisController extends RedisApplication implements Constant{
 		request.setAttribute("change2ShowType", showType.getChange2());
 		request.setAttribute("showType", showType.getState());
 		request.setAttribute("pagination", pagination.createLinkTo());
+		request.setAttribute("keyPrefixs", keyPrefixs);
 		request.setAttribute("viewPage", "redis/list.jsp");
 		return "admin/main";
 	}
 	
 	private Pagination stringListPagination(HttpServletRequest request, String queryKey, String queryKey_ch, String queryValue, String queryByKeyPrefixs) {
 		Pagination pagination = getPagination(request);
-		String url = "?" + "queryKey=" + queryKey + "&queryKey_ch=" + queryKey_ch + "&queryValue=" + queryValue;
+		String url = "?" + "queryKey=" + queryKey + "&queryKey_ch=" + queryKey_ch + "&queryValue=" + queryValue + "&keyPrefixs="+queryByKeyPrefixs;
 		pagination.setLink_to(url);
 		if(!StringUtil.isEmpty(queryByKeyPrefixs)) {
 			

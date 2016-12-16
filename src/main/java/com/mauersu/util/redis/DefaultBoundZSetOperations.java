@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.springframework.data.redis.connection.DataType;
+import org.springframework.data.redis.connection.RedisZSetCommands;
 import org.springframework.data.redis.core.BoundZSetOperations;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisOperations;
@@ -94,6 +95,16 @@ class DefaultBoundZSetOperations<K, V> extends DefaultBoundKeyOperations<K> impl
 
 	public Set<TypedTuple<V>> reverseRangeByScoreWithScores(double min, double max) {
 		return ops.reverseRangeByScoreWithScores(getKey(), min, max);
+	}
+
+	@Override
+	public Set<V> rangeByLex(RedisZSetCommands.Range range) {
+		return null;
+	}
+
+	@Override
+	public Set<V> rangeByLex(RedisZSetCommands.Range range, RedisZSetCommands.Limit limit) {
+		return null;
 	}
 
 	public Set<TypedTuple<V>> reverseRangeWithScores(long start, long end) {

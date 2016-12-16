@@ -15,21 +15,16 @@
  */
 package com.mauersu.util.redis;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
-
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.connection.RedisZSetCommands;
 import org.springframework.data.redis.connection.RedisZSetCommands.Tuple;
-import org.springframework.data.redis.core.ConvertingCursor;
-import org.springframework.data.redis.core.Cursor;
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ScanOptions;
-import org.springframework.data.redis.core.ZSetOperations;
-import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
+import org.springframework.data.redis.core.*;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * Default implementation of {@link ZSetOperations}.
@@ -157,6 +152,16 @@ class DefaultZSetOperations<K, V> extends AbstractOperations<K, V> implements ZS
 		}, true);
 
 		return deserializeTupleValues(rawValues);
+	}
+
+	@Override
+	public Set<V> rangeByLex(K key, RedisZSetCommands.Range range) {
+		return null;
+	}
+
+	@Override
+	public Set<V> rangeByLex(K key, RedisZSetCommands.Range range, RedisZSetCommands.Limit limit) {
+		return null;
 	}
 
 	public Set<V> rangeByScore(K key, final double min, final double max) {

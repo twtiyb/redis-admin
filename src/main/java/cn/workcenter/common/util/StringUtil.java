@@ -1,13 +1,12 @@
 package cn.workcenter.common.util;
 
+import org.springframework.util.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.util.StringUtils;
 
 public class StringUtil {
 	

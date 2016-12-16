@@ -15,9 +15,6 @@
  */
 package com.mauersu.util.redis;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisListCommands.Position;
 import org.springframework.data.redis.core.ListOperations;
@@ -25,6 +22,10 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.TimeoutUtils;
 import org.springframework.util.CollectionUtils;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Default implementation of {@link ListOperations}.
@@ -94,6 +95,11 @@ class DefaultListOperations<K, V> extends AbstractOperations<K, V> implements Li
 				return connection.lPush(rawKey, rawValues);
 			}
 		}, true);
+	}
+
+	@Override
+	public Long leftPushAll(K key, Collection<V> values) {
+		return null;
 	}
 
 	public Long leftPushIfPresent(K key, V value) {
@@ -198,6 +204,11 @@ class DefaultListOperations<K, V> extends AbstractOperations<K, V> implements Li
 				return connection.rPush(rawKey, rawValues);
 			}
 		}, true);
+	}
+
+	@Override
+	public Long rightPushAll(K key, Collection<V> values) {
+		return null;
 	}
 
 	public Long rightPushIfPresent(K key, V value) {
